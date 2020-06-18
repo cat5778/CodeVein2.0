@@ -1,0 +1,12 @@
+Player2_Head_SphereCollider_0
+0
+-2
+170
+26
+2
+Player2_Head_SphereCollider_1
+0
+-1
+63
+27
+2

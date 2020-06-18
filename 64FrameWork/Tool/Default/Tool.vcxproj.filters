@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="01. Document">
+      <UniqueIdentifier>{a4ab9ac4-2371-42b5-b935-4481a4e6501f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. FrameWnd">
+      <UniqueIdentifier>{643ea14b-7fa3-4f16-ab94-f5552c6f6779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Dialog">
+      <UniqueIdentifier>{063a2207-7f2a-4aca-af8f-04576cadef46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View">
+      <UniqueIdentifier>{7cc9e231-8619-47b5-82d0-bf0e47760c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Stdafx">
+      <UniqueIdentifier>{b2e7d8b5-f448-4ca8-b363-a4d6131d1ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. WinApp">
+      <UniqueIdentifier>{ecac8d93-8b2c-46b4-931b-e68311eeb210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Scene">
+      <UniqueIdentifier>{8c087775-8bb2-44e3-851b-78b2eebe813f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject">
+      <UniqueIdentifier>{d08fd1b3-0fc8-4237-919e-017e6c07d2ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm">
+      <UniqueIdentifier>{c9259ace-c73f-4914-932b-3c7701f60e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm\00. Tab">
+      <UniqueIdentifier>{57491197-2fd1-40de-99a6-c2af22d12102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\00. Terrain">
+      <UniqueIdentifier>{3d827834-8e7d-4b49-881a-e7e70a9d0c8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\10. Player">
+      <UniqueIdentifier>{69ff9997-a7bc-4790-b870-379a002244c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Default">
+      <UniqueIdentifier>{d6618031-a954-4e09-8445-1e3ef63d11d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90. Managers">
+      <UniqueIdentifier>{51b3ba1c-2977-412f-ac0d-5a891fd820d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm\00. Tab\00. ObjectTab">
+      <UniqueIdentifier>{61fa9822-3a93-4f94-bf17-a0235c8169a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm\00. Tab\01. CameraTab">
+      <UniqueIdentifier>{5cd28d44-bc2e-484f-a161-18283c5611d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\20.TempObject">
+      <UniqueIdentifier>{f131e251-72c8-4d9f-8866-99f00841114d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\20.TempObject\00. StaticObject">
+      <UniqueIdentifier>{0049c12f-2914-4f47-acf3-f274d05faa7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\20.TempObject\01. DynamicObject">
+      <UniqueIdentifier>{8ac95364-582a-44b6-b34e-2a912dbd647b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm\00. Tab\02. NaviTab">
+      <UniqueIdentifier>{4a392a5c-bb3c-4cb6-baec-7426b4db78fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50. NavMesh">
+      <UniqueIdentifier>{d2886996-1e16-405a-bf02-987a5e0d1bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50. NavMesh\00. Cell">
+      <UniqueIdentifier>{a1df7deb-c73c-4ac2-bedc-788dd5a619ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90. Managers\00. KeyManager">
+      <UniqueIdentifier>{dbecf580-f051-4052-813b-018266be1e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="90. Managers\80. Camera">
+      <UniqueIdentifier>{0e48b3cc-4fd9-4336-b9ab-9a2c5c570d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. View\00. MyForm\00. Tab\03. ColliderTab">
+      <UniqueIdentifier>{40278f54-4ec1-4426-929b-30ec07fb7fe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11. SphereCollider">
+      <UniqueIdentifier>{ac17df6e-c537-4b4c-b16b-efd764deec75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. GameObject\01.Weapon">
+      <UniqueIdentifier>{8d8e1f1e-04e3-4330-8686-0aa8fd25ac39}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Tool.h">
+      <Filter>00. WinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>02. FrameWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolView.h">
+      <Filter>03. View</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolDoc.h">
+      <Filter>01. Document</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98. Stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DynamicCamera.h">
+      <Filter>90. Managers\80. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestStage.h">
+      <Filter>05. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MyForm.h">
+      <Filter>03. View\00. MyForm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Terrain.h">
+      <Filter>10. GameObject\00. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Player.h">
+      <Filter>10. GameObject\10. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjectTool.h">
+      <Filter>03. View\00. MyForm\00. Tab\00. ObjectTab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CameraTool.h">
+      <Filter>03. View\00. MyForm\00. Tab\01. CameraTab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PathManager.h">
+      <Filter>90. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DirectoryMgr.h">
+      <Filter>90. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StaticObject.h">
+      <Filter>10. GameObject\20.TempObject\00. StaticObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NavMeshTool.h">
+      <Filter>03. View\00. MyForm\00. Tab\02. NaviTab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\KeyMgr.h">
+      <Filter>90. Managers\00. KeyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ColliderTool.h">
+      <Filter>03. View\00. MyForm\00. Tab\03. ColliderTab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DynamicObject.h">
+      <Filter>10. GameObject\20.TempObject\01. DynamicObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SphereCollider.h">
+      <Filter>11. SphereCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ColliderManager.h">
+      <Filter>90. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Sword.h">
+      <Filter>10. GameObject\01.Weapon</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tool.cpp">
+      <Filter>00. WinApp</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>02. FrameWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolView.cpp">
+      <Filter>03. View</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolDoc.cpp">
+      <Filter>01. Document</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DynamicCamera.cpp">
+      <Filter>90. Managers\80. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestStage.cpp">
+      <Filter>05. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MyForm.cpp">
+      <Filter>03. View\00. MyForm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Terrain.cpp">
+      <Filter>10. GameObject\00. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Player.cpp">
+      <Filter>10. GameObject\10. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ObjectTool.cpp">
+      <Filter>03. View\00. MyForm\00. Tab\00. ObjectTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CameraTool.cpp">
+      <Filter>03. View\00. MyForm\00. Tab\01. CameraTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PathManager.cpp">
+      <Filter>90. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DirectoryMgr.cpp">
+      <Filter>90. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StaticObject.cpp">
+      <Filter>10. GameObject\20.TempObject\00. StaticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NavMeshTool.cpp">
+      <Filter>03. View\00. MyForm\00. Tab\02. NaviTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\KeyMgr.cpp">
+      <Filter>90. Managers\00. KeyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ColliderTool.cpp">
+      <Filter>03. View\00. MyForm\00. Tab\03. ColliderTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DynamicObject.cpp">
+      <Filter>10. GameObject\20.TempObject\01. DynamicObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SphereCollider.cpp">
+      <Filter>11. SphereCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ColliderManager.cpp">
+      <Filter>90. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sword.cpp">
+      <Filter>10. GameObject\01.Weapon</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Tool.ico">
+      <Filter>99. Default</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>99. Default</Filter>
+    </Image>
+    <Image Include="res\ToolDoc.ico">
+      <Filter>99. Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tool.rc">
+      <Filter>99. Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Tool.rc2">
+      <Filter>99. Default</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99. Default</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
