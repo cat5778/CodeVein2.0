@@ -96,20 +96,39 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_eCurState >= OBJ_ATTACK && m_eCurState <= OBJ_CHARGE_ATTACK)
 	{
 		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
-		if (m_eCurState != OBJ_CHARGE_ATTACK)
+
+		if (m_eCurState == OBJ_ATTACK)
 		{
-			if (fCurRatio >= 0.1f&& fCurRatio <= 0.7f)
+			if (fCurRatio >= 0.1f&& fCurRatio <= 0.6f)
+				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
+			else
+				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, false);
+		}
+		else if (m_eCurState == OBJ_CHARGE_ATTACK)
+		{
+			if ((fCurRatio >= 0.1f&& fCurRatio <= 0.15f)||
+				(fCurRatio >= 0.175f&& fCurRatio <= 0.2f)||
+				(fCurRatio >= 0.225f&& fCurRatio <= 0.25f)||
+				(fCurRatio >= 0.275f&& fCurRatio <= 0.3f))
 			{
 				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
 			}
 			else
 				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, false);
 		}
-		else
-		{
-
-		}
 	}
+
+	if (m_eCurState == OBJ_DODGE)
+	{
+		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
+		cout << fCurRatio << endl;
+		if (fCurRatio <= 0.3f)
+			m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_HURT, false);
+		else
+			m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_HURT, true);
+	}
+
+
 
 	//_vec3 vPos2 = *m_pTransformCom->Get_Info(Engine::INFO_POS);
 	//cout <<"X=" <<vPos.x << "y="<< vPos.y <<"Z="<< vPos.z << endl;
@@ -1177,15 +1196,20 @@ void CPlayer::Collision_Check(_float fTimeDelta)
 		if (pTargetCollCom != nullptr)
 		{
 			_float fPower = 0.f;
+			_bool bIsAttackColl, bIsStepColl, bIsHurtColl = { false, };
+			bIsAttackColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_ATTACK),
+				m_pColliderGroupCom->Get_ColliderEnable(Engine::COLOPT_ATTACK),
+				pTargetCollCom->Get_CollVec(Engine::COLOPT_HURT),
+				pTargetCollCom->Get_ColliderEnable(Engine::COLOPT_HURT));
 
-			_bool bIsAttackColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_ATTACK),
-				pTargetCollCom->Get_CollVec(Engine::COLOPT_HURT));
-
-			_bool bIsStepColl = m_pCalculatorCom->Bounding_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_STEP),
+			bIsStepColl = m_pCalculatorCom->Bounding_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_STEP),
 				pTargetCollCom->Get_CollVec(Engine::COLOPT_STEP), &fPower);
 
-			_bool bIsHurtColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_HURT),
-				pTargetCollCom->Get_CollVec(Engine::COLOPT_ATTACK));
+			
+			bIsHurtColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_HURT),
+															m_pColliderGroupCom->Get_ColliderEnable(Engine::COLOPT_HURT),
+															pTargetCollCom->Get_CollVec(Engine::COLOPT_ATTACK),
+															pTargetCollCom->Get_ColliderEnable(Engine::COLOPT_ATTACK));
 
 			if (bIsAttackColl)
 			{

@@ -42,8 +42,11 @@ public:
 									const CTerrainTex* pTerrainBufferCom,
 									const CTransform*	pTerrainTransformCom);
 
-	_bool		Collsion_Sphere(const vector<Engine::CSphereColliderCom*>* pSourceVec,	const vector<Engine::CSphereColliderCom*>* pDestVec);
-		
+
+	_bool		Collsion_Sphere(const vector<Engine::CSphereColliderCom*>* pSourceVec,
+								_bool bIsSourCollEnable,
+								const vector<Engine::CSphereColliderCom*>* pDestVec,
+								_bool bIsDestCollEnable);
 	_bool		Bounding_Sphere(const vector<Engine::CSphereColliderCom*>* pSourceVec, const vector<Engine::CSphereColliderCom*>* pDestVec, _float *pOutfPower);
 
 

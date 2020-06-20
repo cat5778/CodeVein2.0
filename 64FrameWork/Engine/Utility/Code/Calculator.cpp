@@ -205,21 +205,34 @@ _vec3 Engine::CCalculator::Picking_OnTerrain(HWND hWnd,
 
 	return _vec3(0.f, 0.f, 0.f);
 }
-
-_bool CCalculator::Collsion_Sphere(const vector<Engine::CSphereColliderCom*>* pSourceVec, 
-									const vector<Engine::CSphereColliderCom*>* pDestVec)
+_bool CCalculator::Collsion_Sphere(const vector<Engine::CSphereColliderCom*>* pSourceVec,
+	_bool bIsSourCollEnable,
+	const vector<Engine::CSphereColliderCom*>* pDestVec,
+	_bool bIsDestCollEnable)
 {
-	_vec3 vSourcePos, vDestPos ;
+	if (!bIsSourCollEnable || !bIsDestCollEnable)
+	{
+		for (auto pSource : *pSourceVec)
+			pSource->Set_bIsColl(false);
+		for (auto pDest : *pDestVec)
+			pDest->Set_bIsColl(false);
+
+		return false;
+
+	}
+
+	_vec3 vSourcePos, vDestPos;
 	_float fSourceRadian, fDestRadian, fDistance, fRadian;
 
 	for (auto pSource : *pSourceVec)
 	{
+
 		pSource->Set_bIsColl(false);
 
 		vSourcePos = pSource->Get_WorldPos();
 		fSourceRadian = *pSource->Get_Radius();
-		 for (auto pDest : *pDestVec)
-		 {
+		for (auto pDest : *pDestVec)
+		{
 			pDest->Set_bIsColl(false);
 			vDestPos = pDest->Get_WorldPos();
 
@@ -235,11 +248,11 @@ _bool CCalculator::Collsion_Sphere(const vector<Engine::CSphereColliderCom*>* pS
 
 				pSource->Set_CollisionObjName(pDest->Get_ObjTag());
 				wstring tempSource = pSource->Get_ObjTag();
-				wstring tempDest= pDest->Get_ObjTag();
+				wstring tempDest = pDest->Get_ObjTag();
 				return true;
 			}
 
-		 }
+		}
 	}
 
 	return false;

@@ -29,7 +29,9 @@ public:
 	vector<wstring>*						Get_CollNameVec(COLLOPTION eOption);
 	//void									Set_CollNameVec(COLLOPTION  eOption,wstring wstrCollObj);
 	//void									DeleteCollName(COLLOPTION  eOption, wstring wstrCollObj);
+
 	_bool									IsColl(COLLOPTION eCollType, COLLSTATE eCollState);
+	_bool									Get_ColliderEnable(COLLOPTION eOption);
 	void									Set_ColliderEnable(COLLOPTION eOption, _bool bIsEnable);
 	void									StateMachine(COLLOPTION eOption);
 

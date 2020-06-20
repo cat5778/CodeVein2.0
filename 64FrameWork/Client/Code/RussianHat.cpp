@@ -123,7 +123,7 @@ _int CRussianHat::Update_GameObject(const _float & fTimeDelta)
 	//	Pattern(fTimeDelta);
 
 	//}
-	//
+	
 	
 
 
@@ -419,7 +419,7 @@ void CRussianHat::Battle_Start(_float fTimeDelta)
 	}
 	if (m_eCurState == RUSSIAN_START_IDLE)
 	{
-		cout << Get_TargetDist() << endl;
+		//cout << Get_TargetDist() << endl;
 		if (Get_TargetDist() <= 6.0f)
 			m_eCurState = RUSSIAN_BATTLE_START;
 	}

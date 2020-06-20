@@ -38,15 +38,15 @@ _int CColliderGroup::Update_Component(const _float & fTimeDelta)
 			pColl->Update_Component(fTimeDelta);
 			StateMachine((COLLOPTION)i);
 			
-			if (!m_bIsCollEnable[i])
-			{
-				if (m_eCurState[(COLLOPTION)i] == STATE_EXIT)
-					m_eCurState[(COLLOPTION)i] = STATE_END;
-				else if (m_eCurState[(COLLOPTION)i] != STATE_END)
-					m_eCurState[(COLLOPTION)i] = STATE_EXIT;
+			//if (!m_bIsCollEnable[i])
+			//{
+			//	if (m_eCurState[(COLLOPTION)i] == STATE_EXIT)
+			//		m_eCurState[(COLLOPTION)i] = STATE_END;
+			//	else if (m_eCurState[(COLLOPTION)i] != STATE_END)
+			//		m_eCurState[(COLLOPTION)i] = STATE_EXIT;
 
-				continue;
-			}
+			//	break;
+			//}
 
 			if (bIsColl == false)
 			{
@@ -239,6 +239,11 @@ _bool CColliderGroup::IsColl(COLLOPTION eCollType,COLLSTATE eCollState)
 	return m_bisColl[eCollType][eCollState];
 
 
+}
+
+_bool CColliderGroup::Get_ColliderEnable(COLLOPTION eOption)
+{
+	return m_bIsCollEnable[eOption];
 }
 
 void CColliderGroup::Set_ColliderEnable(COLLOPTION eOption, _bool bIsEnable)
