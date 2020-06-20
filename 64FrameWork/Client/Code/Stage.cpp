@@ -26,20 +26,13 @@ HRESULT CStage::Ready_Scene(void)
 	FAILED_CHECK_RETURN(Ready_GameLogic_Layer(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_UI_Layer(L"UI"), E_FAIL);
 	//CSoundMgr::GetInstance()->PlayBGM(L"Adam Levine - Lost Stars Lyrics.mp3");
-	CSoundMgr::GetInstance()->SetVolume(CSoundMgr::BGM, 0.5f);
+	//CSoundMgr::GetInstance()->SetVolume(CSoundMgr::BGM, 0.5f);
 	//쉐이더적용후추가 
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	m_pGraphicDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-	//
-
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
-
-	//m_pGraphicDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	//m_pGraphicDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-	//m_pGraphicDev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-
+	
 	return S_OK;
 }
 
@@ -136,8 +129,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	{
 		pGameObject = CRussianHat::Create(m_pGraphicDev,L"RussianHat",0);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"RussianHat", pGameObject), E_FAIL);
-	
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(pGameObject->Get_InstName().c_str(), pGameObject), E_FAIL);
+
 		//Shield 
 		pGameObject = CShield::Create(m_pGraphicDev, 0);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -232,28 +225,6 @@ HRESULT CStage::Ready_LightInfo(void)
 	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
-
-
-	//tLightInfo.Type = D3DLIGHT_POINT;
-
-	//tLightInfo.Diffuse = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-	//tLightInfo.Specular = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-	//tLightInfo.Ambient = D3DXCOLOR(0.f, 1.f, 0.f, 1.f);
-	//tLightInfo.Position = _vec3(10.f, 2.f, 10.f);
-	//tLightInfo.Range = 3.f;
-
-	//FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 1), E_FAIL);
-
-
-	//tLightInfo.Type = D3DLIGHT_POINT;
-
-	//tLightInfo.Diffuse = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//tLightInfo.Specular = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//tLightInfo.Ambient = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	//tLightInfo.Position = _vec3(30.f, 5.f, 10.f);
-	//tLightInfo.Range = 10.f;
-
-	//FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 2), E_FAIL);
 
 	return S_OK;
 }

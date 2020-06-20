@@ -30,7 +30,7 @@ public:
 	//void									Set_CollNameVec(COLLOPTION  eOption,wstring wstrCollObj);
 	//void									DeleteCollName(COLLOPTION  eOption, wstring wstrCollObj);
 	_bool									IsColl(COLLOPTION eCollType, COLLSTATE eCollState);
-
+	void									Set_ColliderEnable(COLLOPTION eOption, _bool bIsEnable);
 	void									StateMachine(COLLOPTION eOption);
 
 
@@ -44,6 +44,8 @@ private:
 
 	vector<wstring>							m_wstrColObjVec[COLOPT_END][STATE_END];
 	_bool									m_bisColl[COLOPT_END][STATE_END] = { false, };
+	_bool									m_bIsCollEnable[COLOPT_END] = { false, };
+
 
 	COLLSTATE								m_eCurState[COLOPT_END];
 	COLLSTATE								m_ePrevState[COLOPT_END];

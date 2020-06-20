@@ -34,10 +34,10 @@ HRESULT CPlayer::Ready_GameObject(void)
 	case LOAD_NOMAL2:
 		m_pTransformCom->Set_Pos(-14.7f, 2.16f, -20.2f); //Boss
 		m_pNaviCom->Set_Index(70);// Base Init Idx 38 
+		Load_Text(L"../../Resource/Data/NavMash/Temp5.txt");
 
 		//m_pTransformCom->Set_Pos(-85.f, 1.3f, 0.01f);Start
 		//m_pNaviCom->Set_Index(0);// Base Init Idx 38 
-		//Load_Text(L"../../Resource/Data/NavMash/Temp5.txt");
 		break;
 	case LOAD_NOMAL3:
 		m_pMeshCom->Set_AnimationSet(46);
@@ -72,63 +72,51 @@ HRESULT CPlayer::Ready_GameObject(void)
 	return S_OK;
 }
 
+HRESULT CPlayer::LateReady_GameObject(void)
+{
+	if (m_ppGameObjectMap == nullptr)
+		m_ppGameObjectMap = &Engine::Get_Layer(L"GameLogic")->Get_ObjectMap();
+
+	return S_OK;
+}
+
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_eCurState >= 10 && m_eCurState <= 25)
+	{
+		KnockBack(fTimeDelta);
+		
 
-	Key_Input(fTimeDelta);
+	}
+	else
+		Key_Input(fTimeDelta);
+	
+
+	StateMachine();
+	if (m_eCurState >= OBJ_ATTACK && m_eCurState <= OBJ_CHARGE_ATTACK)
+	{
+		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
+		if (m_eCurState != OBJ_CHARGE_ATTACK)
+		{
+			if (fCurRatio >= 0.1f&& fCurRatio <= 0.7f)
+			{
+				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
+			}
+			else
+				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, false);
+		}
+		else
+		{
+
+		}
+	}
 
 	//_vec3 vPos2 = *m_pTransformCom->Get_Info(Engine::INFO_POS);
 	//cout <<"X=" <<vPos.x << "y="<< vPos.y <<"Z="<< vPos.z << endl;
 	//cout << "Cur Cell " << m_pNaviCom->Get_CurIndex() << endl;
 
-/*
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
-	m_pMeshCom->Play_Animation(fTimeDelta*m_fAnimSpeed);
-	m_pRendererCom->Add_RenderGroup(Engine::RENDER_NONALPHA, this);*/
 
-
-	
-	//몬스터들 전부다 들고오기
-	
-	Engine::CColliderGroup* pCollCom = dynamic_cast<Engine::CColliderGroup*>
-		(Engine::Get_Component(L"GameLogic", L"RussianHat", L"Com_ColliderGroup", Engine::ID_DYNAMIC));
-	_float fPower=0.f;
-	if (pCollCom != nullptr)
-	{
-		Engine::CTransform* pTransCom = dynamic_cast<Engine::CTransform*>
-			(Engine::Get_Component(L"GameLogic", L"RussianHat", L"Com_Transform", Engine::ID_DYNAMIC));
-
-		_bool bIsColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_ATTACK),
-															pCollCom->Get_CollVec(Engine::COLOPT_HURT));
-
-		_bool bIsColl2 = m_pCalculatorCom->Bounding_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_STEP),
-			pCollCom->Get_CollVec(Engine::COLOPT_STEP),&fPower);
-
-		if (bIsColl2)
-		{
-			cout << fPower << endl;
-			_vec3 vPos = *m_pTransformCom->Get_Info(Engine::INFO_POS);   //플레이어위치 
-			_vec3 vTargetPos = *pTransCom->Get_Info(Engine::INFO_POS);	//몬스터 위치
-
-
-			 _vec3 vDir =vPos - vTargetPos;		//미는 방향
-			 D3DXVec3Normalize(&vDir, &vDir);  // 노말
-			 vDir =vDir*-fPower;
-
-			 vPos = vPos-vDir;						//내포지션에 미는방향으로 더해주기
-			 m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);	//적용
-			 _vec3 vPos3 = *m_pTransformCom->Get_Info(Engine::INFO_POS);
-
-		}
-
-		if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_ENTER))
-			cout << "공격 발생 " << endl;
-		if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_STAY))
-			cout << "공격중 " << endl;
-		if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_EXIT))
-			cout << "공격 끝 " << endl;
-	}
-
+	Collision_Check(fTimeDelta);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pMeshCom->Play_Animation(fTimeDelta*m_fAnimSpeed);
@@ -201,6 +189,9 @@ HRESULT CPlayer::Add_Component(void)
 	pComponent = m_pColliderGroupCom = Engine::CColliderGroup::Create(m_pGraphicDev, m_wstrInstName, m_pTransformCom, m_pMeshCom);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_pComponentMap[Engine::ID_DYNAMIC].emplace(L"Com_ColliderGroup", pComponent);
+	for(int i=0; i<Engine::COLOPT_END;i++)
+		m_pColliderGroupCom->Set_ColliderEnable((Engine::COLLOPTION)i, true);
+
 
 	CColliderManager::GetInstance()->Get_ObjCollider(m_pColliderGroupCom, m_ObjName);
 
@@ -289,6 +280,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if(m_eCurState ==OBJ_WALK)
 			m_eCurState = OBJ_RUN;
 	}
+
 	if (m_pKeyMgr->KeyDown(KEY_LBUTTON))
 	{
 		if (m_eCurState == OBJ_ATTACK)
@@ -296,6 +288,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			_double dRatio = m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period();
 			if (dRatio >= 0.2&&dRatio < 0.7)
 			{
+				//m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK,true);
+
 				m_uiCombo++;
 				switch (m_uiCombo)
 				{
@@ -376,7 +370,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_eCurState == OBJ_ATTACK || m_eCurState == OBJ_STRONG_ATTACK || m_eCurState == OBJ_CHARGE_ATTACK)
+	if (m_eCurState >= OBJ_ATTACK && m_eCurState <= OBJ_CHARGE_ATTACK)
 	{
 		AttackMoveSet(fTimeDelta);
 		StorngAttackMoveSet(fTimeDelta);
@@ -393,7 +387,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (m_pCameraTransformCom != nullptr)
 	{
 		Check_Direction(fTimeDelta);
-		StateMachine();
 	}
 
 }
@@ -462,26 +455,26 @@ HRESULT CPlayer::Load_Text(const TCHAR * pFilePath)
 			break;
 
 		Engine::NAVI_DATA* pNaviData = new Engine::NAVI_DATA;
-
+		
 		pNaviData->vPosition1.x = _wtof(wstrTemp.c_str()); 
 		fin.getline(cTemp, MIN_STR); // 공백을 포함한 문장 단위(개행 단위)로 읽어오기.
-		pNaviData->vPosition1.y = atof(cTemp);
+		pNaviData->vPosition1.y = (_float)atof(cTemp);
 		fin.getline(cTemp, MIN_STR);
-		pNaviData->vPosition1.z = atof(cTemp);
+		pNaviData->vPosition1.z = (_float)atof(cTemp);
 
 		fin.getline(cTemp, MIN_STR); // 공백을 포함한 문장 단위(개행 단위)로 읽어오기.
-		pNaviData->vPosition2.x = atof(cTemp);
+		pNaviData->vPosition2.x = (_float)atof(cTemp);
 		fin.getline(cTemp, MIN_STR); // 공백을 포함한 문장 단위(개행 단위)로 읽어오기.
-		pNaviData->vPosition2.y = atof(cTemp);
+		pNaviData->vPosition2.y = (_float)atof(cTemp);
 		fin.getline(cTemp, MIN_STR);
-		pNaviData->vPosition2.z = atof(cTemp);
+		pNaviData->vPosition2.z = (_float)atof(cTemp);
 
 		fin.getline(cTemp, MIN_STR); // 공백을 포함한 문장 단위(개행 단위)로 읽어오기.
-		pNaviData->vPosition3.x = atof(cTemp);
+		pNaviData->vPosition3.x = (_float)atof(cTemp);
 		fin.getline(cTemp, MIN_STR); // 공백을 포함한 문장 단위(개행 단위)로 읽어오기.
-		pNaviData->vPosition3.y = atof(cTemp);
+		pNaviData->vPosition3.y = (_float)atof(cTemp);
 		fin.getline(cTemp, MIN_STR);
-		pNaviData->vPosition3.z = atof(cTemp);
+		pNaviData->vPosition3.z = (_float)atof(cTemp);
 
 		pNaviData->uiIdx = uidx;
 
@@ -719,6 +712,7 @@ void CPlayer::Check_Direction(_float fTimeDelta)
 
 void CPlayer::StateMachine()
 {
+	_float  fHurtSpeed = 2.5f;
 	if (m_ePreState != m_eCurState)
 	{
 		switch (m_eCurState)
@@ -886,14 +880,53 @@ void CPlayer::StateMachine()
 		{
 			m_fAnimSpeed = 2.f;
 			m_pMeshCom->Set_AnimationSet(25);
-			m_pMeshCom->Set_AddTrackTime(m_fChargeTime+0.3f); //0.3f <-다음 Animation  보정값 
+			m_pMeshCom->Set_AddTrackTime(m_fChargeTime + 0.3f); //0.3f <-다음 Animation  보정값 
 			m_fChargeTime = 0.f;
 		}
 			break;
 		case OBJ_GUARD:
 			m_pMeshCom->Set_AnimationSet(16);
 			break;
-		case OBJ_HURT:
+		case OBJ_HURT_F://10
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(13);
+			break;
+		case OBJ_HURT_FR:
+		case OBJ_HURT_R:
+		case OBJ_HURT_BR:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(11);
+			break;
+		case OBJ_HURT_B:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(12);
+			break;
+		case OBJ_HURT_BL:
+		case OBJ_HURT_L:
+		case OBJ_HURT_FL:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(10);
+			break;
+		case OBJ_STRONG_HURT_F:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(9);
+			break;
+		case OBJ_STRONG_HURT_FR:
+		case OBJ_STRONG_HURT_R:
+		case OBJ_STRONG_HURT_BR:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(7);
+			break;
+		case OBJ_STRONG_HURT_B:
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(8);
+			break;
+			m_fAnimSpeed = fHurtSpeed;
+		case OBJ_STRONG_HURT_BL:
+		case OBJ_STRONG_HURT_L:
+		case OBJ_STRONG_HURT_FL://25
+			m_fAnimSpeed = fHurtSpeed;
+			m_pMeshCom->Set_AnimationSet(6);
 			break;
 		case OBJ_DEAD:
 			break;
@@ -966,7 +999,6 @@ void CPlayer::IdleOption()
 
 void CPlayer::CheckMoveMesh(_float fTimeDelta, Engine::CTransform * pTransform, Engine::INFO eDir, _bool bIsDirRvc, _float fSpeed, Engine::INFO eDir2, _bool bIsDir2Rvc)
 {
-
 	_vec3	vPos, vDir, vDiagonalDir, vOutPos;
 	
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
@@ -975,7 +1007,6 @@ void CPlayer::CheckMoveMesh(_float fTimeDelta, Engine::CTransform * pTransform, 
 	D3DXVec3Normalize(&vDir, &vDir);
 	if (eDir2 == Engine::INFO::INFO_END)
 	{
-
 		if (bIsDirRvc)
 			m_pNaviCom->Move_OnNaviMesh(&vPos, &(vDir * fSpeed* fTimeDelta), &vOutPos);
 		else
@@ -992,13 +1023,10 @@ void CPlayer::CheckMoveMesh(_float fTimeDelta, Engine::CTransform * pTransform, 
 			vDiagonalDir *= -1.f;
 
 		vDir += vDiagonalDir;
-	
 		D3DXVec3Normalize(&vDir, &vDir);
-
 		m_pNaviCom->Move_OnNaviMesh(&vPos, &(vDir * fSpeed* fTimeDelta), &vOutPos);
-
+	
 	}
-
 	m_pTransformCom->Set_Pos(vOutPos.x, vOutPos.y, vOutPos.z);
 
 }
@@ -1017,39 +1045,6 @@ void CPlayer::CheckMoveMesh(_float fTimeDelta, _vec3 vDir, _bool bIsDirRvc, _flo
 
 	m_pTransformCom->Set_Pos(vOutPos.x, vOutPos.y, vOutPos.z);
 	
-	
-	
-	
-	//m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
-	//pTransform->Get_Info(eDir, &vDir);
-	//vDir.y = 0.f;
-	//D3DXVec3Normalize(&vDir, &vDir);
-	//if (eDir2 == Engine::INFO::INFO_END)
-	//{
-
-	//	if (bIsDirRvc)
-	//	else
-	//		m_pNaviCom->Move_OnNaviMesh(&vPos, &(-vDir * fSpeed* fTimeDelta), &vOutPos);
-
-	//}
-	//else
-	//{
-	//	pTransform->Get_Info(eDir2, &vDiagonalDir);
-	//	D3DXVec3Normalize(&vDiagonalDir, &vDiagonalDir);
-	//	if (!bIsDirRvc)
-	//		vDir *= -1.f;
-	//	if (bIsDir2Rvc)
-	//		vDiagonalDir *= -1.f;
-
-	//	vDir += vDiagonalDir;
-
-	//	D3DXVec3Normalize(&vDir, &vDir);
-
-	//	m_pNaviCom->Move_OnNaviMesh(&vPos, &(vDir * fSpeed* fTimeDelta), &vOutPos);
-
-	//}
-
-	//m_pTransformCom->Set_Pos(vOutPos.x, vOutPos.y, vOutPos.z);
 
 }
 
@@ -1070,7 +1065,6 @@ void CPlayer::AttackMoveSet(_float fTimeDelta)
 			break;
 		case 4:
 			MoveAni(fTimeDelta, 0.11f, 0.2f, 3.f, _vec3{ 1.f,1.f,1.f });
-
 			break;
 		case 5:
 			MoveAni(fTimeDelta, 0.01f, 0.14f, 5.0f, _vec3{ 1.f,1.f,1.f });
@@ -1105,7 +1099,7 @@ void CPlayer::ChargeAttackMoveSet(_float fTimeDelta)
 
 void CPlayer::MoveAni(_float fTimeDelta, _float fMinRatio, _float fMaxRatio, _float fSpeed, _vec3 vDir)
 {
-	_float fCurRatio = m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period();
+	_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
 	if (fCurRatio >= fMinRatio && fCurRatio <= fMaxRatio)
 	{
 		CheckMoveMesh(fTimeDelta, m_pTransformCom, Engine::INFO_LOOK, true, fSpeed);
@@ -1159,15 +1153,211 @@ void CPlayer::RotateToLook(_float fTimeDelta)
 
 _bool CPlayer::CheckEnableState()
 {
-	if (m_eCurState != OBJ_ATTACK&& m_eCurState != OBJ_GUARD&&m_eCurState != OBJ_STRONG_ATTACK&&
-			m_eCurState != OBJ_CHARGE_ATTACK&&m_eCurState != OBJ_HURT && m_eCurState != OBJ_DODGE)
-	{
+	//6 ~25 전투패턴
+	if (!(m_eCurState>= 6 && m_eCurState<=25)&& m_eCurState != OBJ_DODGE)
 		return true;
-	}
 	else
 		return false;
 
 }
+
+void CPlayer::Collision_Check(_float fTimeDelta)
+{
+	Engine::CColliderGroup* pTargetCollCom = nullptr;
+	for (auto &pObject : *m_ppGameObjectMap)
+	{
+		if (!pObject.second->IsMonster())
+			continue;
+
+		pTargetCollCom = dynamic_cast<Engine::CColliderGroup*>(Engine::Get_Component(L"GameLogic",
+																					pObject.second->Get_InstName().c_str(),
+																					L"Com_ColliderGroup",
+																					Engine::ID_DYNAMIC));
+
+		if (pTargetCollCom != nullptr)
+		{
+			_float fPower = 0.f;
+
+			_bool bIsAttackColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_ATTACK),
+				pTargetCollCom->Get_CollVec(Engine::COLOPT_HURT));
+
+			_bool bIsStepColl = m_pCalculatorCom->Bounding_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_STEP),
+				pTargetCollCom->Get_CollVec(Engine::COLOPT_STEP), &fPower);
+
+			_bool bIsHurtColl = m_pCalculatorCom->Collsion_Sphere(m_pColliderGroupCom->Get_CollVec(Engine::COLOPT_HURT),
+				pTargetCollCom->Get_CollVec(Engine::COLOPT_ATTACK));
+
+			if (bIsAttackColl)
+			{
+				if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_ENTER))
+					cout << "공격 발생 " << endl;
+				else if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_STAY))
+					cout << "공격중 " << endl;
+			}
+			if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_EXIT))
+				cout << "공격 끝 " << endl;
+			_vec3 vPos, vTargetPos, vOutPos, vDir;
+			if (bIsStepColl)
+			{
+				Engine::CTransform* pTargetTransCom = dynamic_cast<Engine::CTransform*>(pObject.second->Get_Component(L"Com_Transform", Engine::ID_DYNAMIC));
+
+				vPos = *m_pTransformCom->Get_Info(Engine::INFO_POS);   
+				vTargetPos = *pTargetTransCom->Get_Info(Engine::INFO_POS);	
+				vOutPos;
+
+				vDir = vPos - vTargetPos;
+				D3DXVec3Normalize(&vDir, &vDir);
+				vDir = vDir*fPower;
+
+				m_pNaviCom->Move_OnNaviMesh(&vPos, &vDir, &vOutPos);
+
+				m_pTransformCom->Set_Pos(vOutPos.x, vOutPos.y, vOutPos.z);	//적용
+			}
+
+			if (bIsHurtColl)
+			{
+				cout << "피격 발생 " << endl;
+				Engine::CTransform* pTargetTransCom = dynamic_cast<Engine::CTransform*>(pObject.second->Get_Component(L"Com_Transform", Engine::ID_DYNAMIC));
+
+				vPos = *m_pTransformCom->Get_Info(Engine::INFO_POS);
+
+				if (pTargetCollCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_ENTER))
+				{
+					for (auto &pColl : *pTargetCollCom->Get_CollVec(Engine::COLOPT_ATTACK)) //공격한 콜라이더 가지고오기 
+					{
+						if (pColl->IsColl())
+						{
+							Hurt(fTimeDelta, vPos, pColl->Get_WorldPos(), 12.f);
+						}
+
+					}
+				}
+				else if (m_pColliderGroupCom->IsColl(Engine::COLOPT_HURT, Engine::STATE_STAY))
+				{
+
+
+					cout << "피격중 " << endl;
+
+				}
+			}
+			if (m_pColliderGroupCom->IsColl(Engine::COLOPT_HURT, Engine::STATE_EXIT))
+					cout << "피격 끝 " << endl;
+
+
+
+		}
+	}
+
+
+}
+
+void CPlayer::Hurt(_float fTimeDelta, _vec3 vPos, _vec3 vTargetPos, _float fDamage)
+{
+	// 데미지에 비례해서 넉백 거리, 애니메이션 변경
+	if (m_dwHurtDirectionFlag)
+	{
+		cout << "방향있음" << endl;
+		return;
+	}
+
+
+	_vec3 vDir;
+	ExtractY_NormalDir(vPos, vTargetPos, &vDir);
+
+	_vec3 vLook=*m_pTransformCom->Get_Info(Engine::INFO_LOOK);
+	_vec3 vRight= *m_pTransformCom->Get_Info(Engine::INFO_RIGHT);
+	_float fAngle=0.f;
+	
+	_float fCos45 = 0.52532198881f;
+
+	fAngle = Get_Angle(vDir, vLook);
+
+	if (cosf(D3DXToRadian(fAngle)) >= fCos45)
+		m_dwHurtDirectionFlag |= BACK;
+	else if (cosf(D3DXToRadian(fAngle)) <= -fCos45)
+		m_dwHurtDirectionFlag |= FRONT;
+
+	fAngle = Get_Angle(vDir, vRight);
+	if (cosf(D3DXToRadian(fAngle)) >= fCos45)
+		m_dwHurtDirectionFlag |= LEFT;
+	else if (cosf(D3DXToRadian(fAngle)) <= -fCos45)
+		m_dwHurtDirectionFlag |= RIGHT;
+
+	m_vKnockBackDir = vDir;
+	_bool bIsStrongAttack = false;
+	if (fDamage >= 10.f)
+		bIsStrongAttack = true;
+	cout << m_dwHurtDirectionFlag << endl;
+	switch (m_dwHurtDirectionFlag)	
+	{
+		case DIR_F:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_F	: m_eCurState = OBJ_HURT_F;
+			break;
+		case DIR_FR:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_FR	: m_eCurState = OBJ_HURT_FR;
+			break;
+		case DIR_R:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_R	: m_eCurState = OBJ_HURT_R;
+			break;
+		case DIR_B:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_B	: m_eCurState = OBJ_HURT_B;
+			break;
+		case DIR_BR:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_BR	: m_eCurState = OBJ_HURT_BR;
+			break;
+		case DIR_BL:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_BL	: m_eCurState = OBJ_HURT_BL;
+			break;
+		case DIR_L:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_L	: m_eCurState = OBJ_HURT_L;
+			break;
+		case DIR_FL:
+			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_FL	: m_eCurState = OBJ_HURT_FL;
+			break;
+		default:
+			break;
+	}
+	cout << m_eCurState << endl;
+
+
+
+
+
+
+}
+
+void CPlayer::KnockBack(_float fTimeDelta)
+{
+	//if (m_dwHurtDirectionFlag)
+		//m_dwOldHurtDirectionFlag = m_dwHurtDirectionFlag;
+
+	if (m_dwHurtDirectionFlag)
+	{
+		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
+		if (m_eCurState >= OBJ_HURT_F&&m_eCurState <= OBJ_HURT_FL)
+		{
+			if (fCurRatio >= 0.f&& fCurRatio <= 0.3f)
+				CheckMoveMesh(fTimeDelta, m_vKnockBackDir, false, 1.5f);
+		}
+		else
+		{
+			if (fCurRatio >= 0.f&& fCurRatio <= 0.3f)
+				CheckMoveMesh(fTimeDelta, m_vKnockBackDir, false, 3.5f);
+		}
+
+		if (fCurRatio >= 0.9f)
+		{
+
+			m_eCurState = OBJ_IDLE;
+			m_dwOldHurtDirectionFlag = 0;
+			m_dwDodge_DirectionFlag = 0;
+			m_dwDirectionFlag = 0;
+			m_dwHurtDirectionFlag = 0;
+		}
+	}		
+
+}
+
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint uiIdx , _uint uiStageIdx)
 {

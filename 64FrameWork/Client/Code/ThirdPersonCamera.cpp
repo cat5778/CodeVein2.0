@@ -120,7 +120,7 @@ void CThirdPersonCamera::Target_Renewal(const _float& fTimeDelta)
 
 
 
-		m_pMonTransform = dynamic_cast<Engine::CTransform*>(Engine::Get_Component(L"GameLogic", L"RussianHat", L"Com_Transform", Engine::ID_DYNAMIC));
+		m_pMonTransform = dynamic_cast<Engine::CTransform*>(Engine::Get_Component(L"GameLogic", L"RussianHat_0", L"Com_Transform", Engine::ID_DYNAMIC));
 		m_vAt = *m_pMonTransform->Get_Info(Engine::INFO_POS);   // TargetPos 
 		_vec3 vTempDir = m_pTransformCom->m_vInfo[Engine::INFO_POS] - m_vAt;
 

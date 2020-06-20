@@ -29,7 +29,7 @@ _int CShield::Update_GameObject(const _float& fTimeDelta)
 {
 	if (nullptr == m_pParentBoneMatrix)
 	{
-		Engine::CDynamicMesh*	pMonsterMeshCom = dynamic_cast<Engine::CDynamicMesh*>(Engine::Get_Component(L"GameLogic", L"RussianHat", L"Com_Mesh", Engine::ID_STATIC));
+		Engine::CDynamicMesh*	pMonsterMeshCom = dynamic_cast<Engine::CDynamicMesh*>(Engine::Get_Component(L"GameLogic", L"RussianHat_0", L"Com_Mesh", Engine::ID_STATIC));
 		NULL_CHECK_RETURN(pMonsterMeshCom, 0);
 
 		const Engine::D3DXFRAME_DERIVED* pBone = pMonsterMeshCom->Get_FrameByName("RightHandAttach");
@@ -37,7 +37,7 @@ _int CShield::Update_GameObject(const _float& fTimeDelta)
 
 		m_pParentBoneMatrix = &pBone->CombinedTransformationMatrix;
 
-		Engine::CTransform*	pPlayerTransCom = dynamic_cast<Engine::CTransform*>(Engine::Get_Component(L"GameLogic", L"RussianHat", L"Com_Transform", Engine::ID_DYNAMIC));
+		Engine::CTransform*	pPlayerTransCom = dynamic_cast<Engine::CTransform*>(Engine::Get_Component(L"GameLogic", L"RussianHat_0", L"Com_Transform", Engine::ID_DYNAMIC));
 		NULL_CHECK_RETURN(pPlayerTransCom, 0);
 
 		m_pParentWorldMatrix = pPlayerTransCom->Get_WorldMatrixPointer();

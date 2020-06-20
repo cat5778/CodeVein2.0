@@ -71,7 +71,6 @@ protected:
 	_uint					m_uiAni = 0;
 
 protected:
-	wstring					m_wstrInstName;
 	_uint					m_uiPattern = 0;
 	_float					m_fDistance = 0.f;
 	_float					m_fDetectRange = 0.f;

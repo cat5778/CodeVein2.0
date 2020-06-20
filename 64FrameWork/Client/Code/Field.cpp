@@ -120,7 +120,7 @@ HRESULT CField::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject = CRussianHat::Create(m_pGraphicDev,L"RussianHat",0,m_uiStageIdx);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"RussianHat", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(pGameObject->Get_InstName().c_str(), pGameObject), E_FAIL);
 	
 	//Shield 
 	pGameObject = CShield::Create(m_pGraphicDev, 0);

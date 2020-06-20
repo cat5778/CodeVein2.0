@@ -138,6 +138,20 @@ void CGameObject::Compute_ViewZ(const _vec3 * pPos)
 	m_fViewZ = D3DXVec3Length(&(vCamPos - *pPos));
 }
 
+void CGameObject::ExtractY_NormalDir(_vec3 vDest, _vec3 vSour, _vec3 * pOut)
+{
+	_vec3 vTempDest, vTempSour;
+	vTempDest = vDest;
+	vTempSour = vSour;
+
+	vTempDest.y = 0.f;
+	vTempSour.y = 0.f;
+	
+	*pOut = vTempDest - vTempSour;
+	D3DXVec3Normalize(pOut, pOut);
+
+}
+
 void Engine::CGameObject::Free(void)
 {
 	for (_uint i = 0; i < ID_END; ++i)

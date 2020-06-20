@@ -45,8 +45,8 @@ private:
 
 private:
 	wstring						m_wstrCollisionObj;
+	//_float						m_fDamage = 0.0f;
 	
-
 	_float						m_fRadius			= 1.0f;
 	_vec3						m_vPos				= { 0.f,0.f,0.f };
 	_vec3						m_vWorldPos;

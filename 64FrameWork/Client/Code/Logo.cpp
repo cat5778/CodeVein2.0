@@ -40,7 +40,6 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 
 		if (Engine::Get_DIKeyState(DIK_RETURN) & 0x80)
 		{
-
 			Engine::CScene*		pScene = CStage::Create(m_pGraphicDev);
 			NULL_CHECK_RETURN(pScene, E_FAIL);
 
@@ -58,7 +57,10 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 void CLogo::Render_Scene(void)
 {
 	// DEBUG ¿ë
-	Engine::Render_Font(L"Font_Default", m_pLoading->Get_LoadString(), &_vec2(10.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	Engine::Render_Font(L"Font_Default", m_pLoading->Get_LoadString(CLoading::BASIC),	&_vec2(10.f, 10.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	Engine::Render_Font(L"Font_Default", m_pLoading->Get_LoadString(CLoading::STATIC),	&_vec2(10.f, 30.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	Engine::Render_Font(L"Font_Default", m_pLoading->Get_LoadString(CLoading::DYNAMIC), &_vec2(10.f, 50.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	Engine::Render_Font(L"Font_Default", m_pLoading->Get_LoadString(CLoading::COLLIDER),&_vec2(10.f, 70.f), D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
 
 }
 

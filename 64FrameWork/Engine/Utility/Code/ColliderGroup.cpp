@@ -30,12 +30,24 @@ _int CColliderGroup::Update_Component(const _float & fTimeDelta)
 {
 	for (int i = 0; i < COLOPT_END; i++)
 	{
+
+
 		_bool bIsColl=false;
 		for (auto &pColl : m_pCollVec[i])
 		{
 			pColl->Update_Component(fTimeDelta);
 			StateMachine((COLLOPTION)i);
 			
+			if (!m_bIsCollEnable[i])
+			{
+				if (m_eCurState[(COLLOPTION)i] == STATE_EXIT)
+					m_eCurState[(COLLOPTION)i] = STATE_END;
+				else if (m_eCurState[(COLLOPTION)i] != STATE_END)
+					m_eCurState[(COLLOPTION)i] = STATE_EXIT;
+
+				continue;
+			}
+
 			if (bIsColl == false)
 			{
 				if (pColl->IsColl())
@@ -43,8 +55,9 @@ _int CColliderGroup::Update_Component(const _float & fTimeDelta)
 					if (m_eCurState[(COLLOPTION)i] == STATE_ENTER)
 						m_eCurState[(COLLOPTION)i] = STATE_STAY;
 
-					if (m_eCurState[(COLLOPTION)i] != STATE_STAY )
+					else if (m_eCurState[(COLLOPTION)i] != STATE_STAY )
 						m_eCurState[(COLLOPTION)i] = STATE_ENTER;
+
 					bIsColl = true;
 				}
 			}
@@ -53,7 +66,7 @@ _int CColliderGroup::Update_Component(const _float & fTimeDelta)
 		{
 			if (m_eCurState[(COLLOPTION)i] == STATE_EXIT)
 				m_eCurState[(COLLOPTION)i] = STATE_END;
-			if (m_eCurState[(COLLOPTION)i] == STATE_STAY)
+			else if (m_eCurState[(COLLOPTION)i] != STATE_END)
 				m_eCurState[(COLLOPTION)i] = STATE_EXIT;
 		}
 	}
@@ -226,6 +239,11 @@ _bool CColliderGroup::IsColl(COLLOPTION eCollType,COLLSTATE eCollState)
 	return m_bisColl[eCollType][eCollState];
 
 
+}
+
+void CColliderGroup::Set_ColliderEnable(COLLOPTION eOption, _bool bIsEnable)
+{
+	m_bIsCollEnable[eOption] = bIsEnable;
 }
 
 

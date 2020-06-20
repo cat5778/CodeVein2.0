@@ -7,12 +7,15 @@
 CRussianHat::CRussianHat(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrName,_uint uiIdx, _uint uiStageIdx )
 	: CDynamicObject(pGraphicDev,wstrName,uiIdx, uiStageIdx)
 {
-	
+	m_bIsMonster = true;
+
 }
 
 CRussianHat::CRussianHat(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrName, _uint uiIdx, TRANSFORM_INFO tInfo, _uint uiStageIdx)
 	:CDynamicObject(pGraphicDev,wstrName,uiIdx,tInfo, uiStageIdx)
+
 {
+	m_bIsMonster = true;
 }
 
 CRussianHat::~CRussianHat()
@@ -102,8 +105,8 @@ _int CRussianHat::Update_GameObject(const _float & fTimeDelta)
 	}
 		StateMachine();
 
-	srand((unsigned int)time(NULL));
-	
+	//srand((unsigned int)time(NULL));
+	//
 	//if (!m_bIsStart)
 	//{
 	//	Battle_Start(fTimeDelta);
@@ -190,6 +193,10 @@ HRESULT CRussianHat::Add_Component(void)
 	pComponent = m_pColliderGroupCom = Engine::CColliderGroup::Create(m_pGraphicDev, m_wstrInstName, m_pTransformCom, m_pMeshCom);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_pComponentMap[Engine::ID_DYNAMIC].emplace(L"Com_ColliderGroup", pComponent);
+	for (int i = 0; i < Engine::COLOPT_END; i++)
+		m_pColliderGroupCom->Set_ColliderEnable((Engine::COLLOPTION)i, true);
+
+
 
 	pComponent = m_pNaviCom = dynamic_cast<Engine::CNaviMesh*>(Engine::CNaviMesh::Create(m_pGraphicDev));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
