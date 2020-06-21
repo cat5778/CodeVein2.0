@@ -30,6 +30,7 @@ private://Pattern
 	void					Pattern(_float fTimeDelta);
 
 	void					Chaing_Target(_float fTimeDelta);
+	//Phase1
 	void					Phase1(_float fTimeDelta);
 	void					TshieldAttack_Ready(_float fTimeDelta);
 	void					TshieldAttack(_float fTimeDelta);
@@ -48,10 +49,23 @@ private://Pattern
 	void					Idle(_float fTimeDelta);
 
 	void					Deformation(_float fTimeDelta);
-
+	//Phase2
+	
 	void					Phase2(_float fTimeDelta);
 
+	void					BoostAttack_S(_float fTimeDelta);
+	void					BoostAttack_L(_float fTimeDelta);
+	void					BoostAttack_E(_float fTimeDelta);
 
+	void					FistAttack_N(_float fTimeDelta);
+
+	void					BoostJump_S(_float fTimeDelta);
+	void					BoostJump_L(_float fTimeDelta);
+	void					BoostJump_E(_float fTimeDelta);
+
+	//패턴 추가할것 원거리 마법 ,얼음검 휘두르기 
+
+	//void					
 
 public:
 	static CRussianHat*	Create(LPDIRECT3DDEVICE9 pGraphicDev, wstring wstrName, _uint uiIdx = 0, _uint uiStageIdx = 0);
@@ -62,6 +76,7 @@ private:
 	_float						m_fJump=0.f;
 	RUSSIANTSTATE				m_eCurState;
 	RUSSIANTSTATE				m_ePreState;
+	_bool						m_bIsPhase2 = false;
 private:
 	virtual void			Free(void) override;
 };
@@ -80,6 +95,7 @@ private:
 //10. TFist_AttackBoost01A_E
 //11. TFist_AttackBoost01_L
 //12. TFist_AttackBoost01_S
+
 //13. TShield_Deformation_N
 //14. TShield_AttackJump01_N
 //15. TShield_AttackHorn02_N

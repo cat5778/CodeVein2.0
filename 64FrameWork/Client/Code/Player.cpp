@@ -95,21 +95,21 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	StateMachine();
 	if (m_eCurState >= OBJ_ATTACK && m_eCurState <= OBJ_CHARGE_ATTACK)
 	{
-		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
+		//_float Get_AniRatio() = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
 
 		if (m_eCurState == OBJ_ATTACK)
 		{
-			if (fCurRatio >= 0.1f&& fCurRatio <= 0.6f)
+			if (Get_AniRatio() >= 0.1f&& Get_AniRatio() <= 0.6f)
 				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
 			else
 				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, false);
 		}
 		else if (m_eCurState == OBJ_CHARGE_ATTACK)
 		{
-			if ((fCurRatio >= 0.1f&& fCurRatio <= 0.15f)||
-				(fCurRatio >= 0.175f&& fCurRatio <= 0.2f)||
-				(fCurRatio >= 0.225f&& fCurRatio <= 0.25f)||
-				(fCurRatio >= 0.275f&& fCurRatio <= 0.3f))
+			if ((Get_AniRatio() >= 0.1f&& Get_AniRatio() <= 0.15f)||
+				(Get_AniRatio() >= 0.175f&& Get_AniRatio() <= 0.2f)||
+				(Get_AniRatio() >= 0.225f&& Get_AniRatio() <= 0.25f)||
+				(Get_AniRatio() >= 0.275f&& Get_AniRatio() <= 0.3f))
 			{
 				m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
 			}
@@ -120,9 +120,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == OBJ_DODGE)
 	{
-		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
-		cout << fCurRatio << endl;
-		if (fCurRatio <= 0.3f)
+		cout << Get_AniRatio() << endl;
+		if (Get_AniRatio() <= 0.3f)
 			m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_HURT, false);
 		else
 			m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_HURT, true);
@@ -173,6 +172,11 @@ void CPlayer::Render_GameObject(void)
 	Safe_Release(pEffect);
 
 	m_pColliderGroupCom->Render_Collider();
+}
+
+_float CPlayer::Get_AniRatio()
+{
+	return (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
 }
 
 HRESULT CPlayer::Add_Component(void)
@@ -1118,8 +1122,7 @@ void CPlayer::ChargeAttackMoveSet(_float fTimeDelta)
 
 void CPlayer::MoveAni(_float fTimeDelta, _float fMinRatio, _float fMaxRatio, _float fSpeed, _vec3 vDir)
 {
-	_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
-	if (fCurRatio >= fMinRatio && fCurRatio <= fMaxRatio)
+	if (Get_AniRatio() >= fMinRatio && Get_AniRatio() <= fMaxRatio)
 	{
 		CheckMoveMesh(fTimeDelta, m_pTransformCom, Engine::INFO_LOOK, true, fSpeed);
 	}
@@ -1142,7 +1145,7 @@ _float CPlayer::Get_AngleOnTheLook()
 void CPlayer::RotateToLook(_float fTimeDelta)
 {
 	_vec3 vRight, vCamLook;
-	_float fCurRatio, fDgree, fRotateDir;
+	_float Get_AniRatio(), fDgree, fRotateDir;
 	vRight = *m_pTransformCom->Get_Info(Engine::INFO_RIGHT);
 	vRight.y = 0.f;
 	D3DXVec3Normalize(&vRight, &vRight);
@@ -1357,19 +1360,18 @@ void CPlayer::KnockBack(_float fTimeDelta)
 
 	if (m_dwHurtDirectionFlag)
 	{
-		_float fCurRatio = (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
 		if (m_eCurState >= OBJ_HURT_F&&m_eCurState <= OBJ_HURT_FL)
 		{
-			if (fCurRatio >= 0.f&& fCurRatio <= 0.3f)
+			if (Get_AniRatio() >= 0.f&& Get_AniRatio() <= 0.3f)
 				CheckMoveMesh(fTimeDelta, m_vKnockBackDir, false, 1.5f);
 		}
 		else
 		{
-			if (fCurRatio >= 0.f&& fCurRatio <= 0.3f)
+			if (Get_AniRatio() >= 0.f&& Get_AniRatio() <= 0.3f)
 				CheckMoveMesh(fTimeDelta, m_vKnockBackDir, false, 3.5f);
 		}
 
-		if (fCurRatio >= 0.9f)
+		if (Get_AniRatio() >= 0.9f)
 		{
 
 			m_eCurState = OBJ_IDLE;

@@ -31,6 +31,7 @@ public:
 
 public:
 	void		Set_CamTransform(Engine::CTransform** pTransform) { m_pCameraTransformCom=*pTransform; }
+	_float		Get_AniRatio();
 
 private:
 	HRESULT		Add_Component(void);
@@ -54,6 +55,9 @@ private:
 	void		Collision_Check(_float fTimeDelta);
 	void		Hurt(_float fTimeDelta, _vec3 vPos , _vec3 vTargetPos,_float fDamage);
 	void		KnockBack(_float fTimeDelta);
+	
+
+
 private:
 	_uint					m_uiStageSet;
 	Engine::CTransform*		m_pCameraTransformCom = nullptr;
