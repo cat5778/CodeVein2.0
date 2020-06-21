@@ -76,11 +76,11 @@ HRESULT CRussianHat::Ready_GameObject()
 	default:
 		break;
 	}
-	//m_eCurState = RUSSIAN_START_IDLE;
+	m_eCurState = RUSSIAN_START_IDLE;
 
 
 //Test	
-	m_eCurState = RUSSIAN_FIST_ATTACKJUMP_S;
+	//m_eCurState = RUSSIAN_FIST_ATTACKJUMP_S;
 
 
 
@@ -104,28 +104,28 @@ _int CRussianHat::Update_GameObject(const _float & fTimeDelta)
 	//	m_uiAni++;
 	//	cout << m_uiAni << endl;
 	//}
+		//StateMachine();
+		//Pattern(fTimeDelta);
+
+	srand((unsigned int)time(NULL));
+	
+	if (!m_bIsStart)
+	{
+		Battle_Start(fTimeDelta);
 		StateMachine();
+
+	}
+	else
+	{
+		if (CKeyMgr::GetInstance()->KeyDown(KEY_NUM1))
+			m_eCurState = RUSSIAN_DEFORMATION;
+
+		StateMachine();
+		m_fDistance=Get_TargetDist();
 		Pattern(fTimeDelta);
 
-	//srand((unsigned int)time(NULL));
-	//
-	//if (!m_bIsStart)
-	//{
-	//	Battle_Start(fTimeDelta);
-	//	StateMachine();
-
-	//}
-	//else
-	//{
-	//	if (CKeyMgr::GetInstance()->KeyDown(KEY_NUM1))
-	//		m_eCurState = RUSSIAN_DEFORMATION;
-
-	//	StateMachine();
-	//	m_fDistance=Get_TargetDist();
-	//	Pattern(fTimeDelta);
-
-	//}
-	//
+	}
+	
 	
 
 
@@ -237,14 +237,14 @@ void CRussianHat::StateMachine()
 		case RUSSIAN_START_IDLE:  
 		{
 			m_fAttackRange = 4.0f;
-			m_fAnimSpeed = 1.0f;
+			m_fAnimSpeed = 2.0f;
 			//m_pMeshCom->Set_AnimationSet(39);
 			m_pMeshCom->Set_AnimationSet(42);
 			break;
 		}
 		case RUSSIAN_BATTLE_START:
 		{
-			m_fAnimSpeed = 1.0f;
+			m_fAnimSpeed = 2.5f;
 			//m_pMeshCom->Set_AnimationSet(40);
 			m_pMeshCom->Set_AnimationSet(43);
 		}
@@ -305,7 +305,7 @@ void CRussianHat::StateMachine()
 
 			m_fAttackRange = 40.f;
 			//m_pMeshCom->Set_AnimationSet(24);
-			m_pMeshCom->Set_AnimationSet(27);
+			m_pMeshCom->Set_AnimationSet(26);
 		}
 			break;
 		case RUSSIAN_ATTACK1:
@@ -406,6 +406,7 @@ void CRussianHat::StateMachine()
 			break;
 		case RUSSIAN_FIST_ATTACKNORMAL1:
 			//m_pMeshCom->Set_AnimationSet(7);
+			m_fAttackRange = 6.0f;
 			m_pMeshCom->Set_AnimationSet(10);
 			break;
 		case RUSSIAN_FIST_ATTACKJUMP_S:
@@ -471,12 +472,12 @@ void CRussianHat::Battle_Start(_float fTimeDelta)
 
 void CRussianHat::Pattern(_float fTimeDelta)
 {
-	//if (m_fCurHp / m_fMaxHp >= 0.6f)
-	//	Phase1(fTimeDelta);
-	//else
-	//{
+	if (m_fCurHp / m_fMaxHp >= 0.6f)
+		Phase1(fTimeDelta);
+	else
+	{
 		Phase2(fTimeDelta);
-	//}
+	}
 
 }
 
@@ -585,7 +586,7 @@ void CRussianHat::TshieldAttack_Ready(_float fTimeDelta)
 {
 	if (m_eCurState == RUSSIAN_ATTACK_READY)
 	{
-		if (m_fAttackRange == 4.0f)
+		if (m_fAttackRange <= 4.0f)
 			m_fAttackRange = 8.0f;
 		
 		m_fRotSpeed = 3.0f;
@@ -651,7 +652,21 @@ void CRussianHat::TshieldFist(_float fTimeDelta)
 			if (!m_bIsPhase2)
 				m_eCurState = RUSSIAN_DODGE;
 			else
-				m_eCurState = RUSSIAN_FIST_ATTACKNORMAL1;
+			{
+				if (m_uiFist >= 1)
+				{
+					m_uiFist = 0;
+					m_eCurState = RUSSIAN_BATTLE_IDLE;
+				}
+				else
+				{
+					m_eCurState = RUSSIAN_FIST_ATTACKNORMAL1;
+					m_uiFist++;
+				}
+
+
+			}
+
 		}
 		else
 		{
@@ -733,7 +748,11 @@ void CRussianHat::Dodge(_float fTimeDelta)
 	{
 		if (Get_AniRatio() >= 0.65f)
 		{
-			m_eCurState = RUSSIAN_ATTACK_SLIDE_S;
+			if(!m_bIsPhase2)
+				m_eCurState = RUSSIAN_ATTACK_SLIDE_S;
+			else
+				m_eCurState = RUSSIAN_FIST_ATTACKBOOST1_S;
+
 		}
 		else
 		{
@@ -778,11 +797,18 @@ void CRussianHat::HoneAttack1(_float fTimeDelta)
 		if (Get_AniRatio() >= 0.8f)
 		{
 			m_fAnimSpeed = 1.0f;
-			if (m_uiPattern & 1)
-				m_eCurState = RUSSIAN_ATTACK3;
+			if (!m_bIsPhase2)
+			{
+				if (m_uiPattern & 1)
+					m_eCurState = RUSSIAN_ATTACK3;
+				else
+					m_eCurState = RUSSIAN_ATTACK_READY;
+			}
 			else
-				m_eCurState = RUSSIAN_ATTACK_READY;
-		
+			{
+				m_eCurState = RUSSIAN_BATTLE_IDLE;
+
+			}
 		}
 		else
 		{
@@ -809,23 +835,40 @@ void CRussianHat::Idle(_float fTimeDelta)
 	}
 	else if (m_eCurState == RUSSIAN_BATTLE_IDLE)
 	{
-		if (Get_AniRatio() >= 0.05f)
+		if (!m_bIsPhase2)
 		{
-			
-			if (m_uiPattern == 0)
-				m_eCurState = RUSSIAN_ATTACK_HORN1;
-			else if (m_uiPattern == 1)
-				m_eCurState = RUSSIAN_ATTACK_READY;
-			else if (m_uiPattern == 2)
-				m_eCurState = RUSSIAN_ATTACK3;
-			else if (m_uiPattern == 3)
-				m_eCurState = RUSSIAN_ATTACK_SLIDE_S;
-			else if(m_uiPattern >=4)
-				m_uiPattern = -1;
-			m_uiPattern++;
-			
+			if (Get_AniRatio() >= 0.05f)
+			{
+
+				if (m_uiPattern == 0)
+					m_eCurState = RUSSIAN_ATTACK_HORN1;
+				else if (m_uiPattern == 1)
+					m_eCurState = RUSSIAN_ATTACK_READY;
+				else if (m_uiPattern == 2)
+					m_eCurState = RUSSIAN_ATTACK3;
+				else if (m_uiPattern == 3)
+					m_eCurState = RUSSIAN_ATTACK_SLIDE_S;
+				else if (m_uiPattern >= 4)
+					m_uiPattern = -1;
+				m_uiPattern++;
+
+			}
 		}
-			
+		else
+		{
+			if (m_uiPattern == 0)
+				m_eCurState = RUSSIAN_FIST_ATTACKBOOST1_S;
+			else if (m_uiPattern == 1)
+				m_eCurState = RUSSIAN_FIST_ATTACKNORMAL1;
+			else if (m_uiPattern == 2)
+				m_eCurState = RUSSIAN_FIST_ATTACKJUMP_S;
+			else if (m_uiPattern == 3)
+				m_eCurState = RUSSIAN_ATTACK_HORN1;
+			else if (m_uiPattern >= 4)
+				m_uiPattern = -1;
+
+			m_uiPattern++;
+		}
 
 	}
 	else if (m_pMeshCom->Is_AnimationSetEnd())
@@ -849,6 +892,12 @@ void CRussianHat::Deformation(_float fTimeDelta)
 
 			}
 		}
+		else if (Get_AniRatio() >= 0.7f)
+		{
+			m_bIsPhase2 = true;
+			m_eCurState = RUSSIAN_BATTLE_IDLE;
+
+		}
 		else
 		{
 
@@ -859,25 +908,23 @@ void CRussianHat::Deformation(_float fTimeDelta)
 
 void CRussianHat::Phase2(_float fTimeDelta)
 {
-	m_bIsPhase2 = true;
 	if (m_fDistance >= m_fAttackRange)
 	{
-		////if (m_fDistance >= 7.f)
-		////{
-		////	if (rand() & 1)
-		////		m_eCurState = ;
-		////	else
-		////		m_eCurState = RUSSIAN_ATTACK_READY;
+		if (m_fDistance >= 7.f)
+		{
+			if (rand() & 1)
+				m_eCurState = RUSSIAN_FIST_ATTACKJUMP_S;
+			else
+				m_eCurState = RUSSIAN_FIST_ATTACKBOOST1_S;
 
-		////}
-		////else if (m_fDistance < 7.f)
-		////	m_eCurState = RUSSIAN_RUN;
-		////else if (m_fDistance < 4.f)
-		////	m_fAttackRange = 10.f;
+		}
+		else if (m_fDistance < 7.f)
+			m_eCurState = RUSSIAN_RUN;
+		else if (m_fDistance < 4.f)
+			m_fAttackRange = 10.f;
 
-		//Chaing_Target(fTimeDelta);
+		Chaing_Target(fTimeDelta);
 
-		//m_eCurState = RUSSIAN_FIST_ATTACKBOOST1_S;
 	}
 	else
 	{
@@ -886,6 +933,16 @@ void CRussianHat::Phase2(_float fTimeDelta)
 		{
 			switch (m_eCurState)
 			{
+			case RUSSIAN_DODGE:
+			{
+				Dodge(fTimeDelta);
+			}
+			case RUSSIAN_ATTACK_HORN1:
+			{				
+				HoneAttack1(fTimeDelta);
+			}
+			break;
+
 			case RUSSIAN_FIST_ATTACKBOOST1_S:
 			{
 				BoostAttack_S(fTimeDelta);
@@ -926,7 +983,11 @@ void CRussianHat::Phase2(_float fTimeDelta)
 				BoostJump_E(fTimeDelta);
 			}
 			break;
-
+			default:
+			{
+				Idle(fTimeDelta);
+			}
+			break;
 			}
 
 
@@ -967,7 +1028,10 @@ void CRussianHat::BoostAttack_E(_float fTimeDelta)
 	if (m_eCurState == RUSSIAN_FIST_ATTACKBOOST1_A_E)
 	{
 		if (Get_AniRatio() >= 0.8f)
-			m_eCurState = RUSSIAN_FIST_ATTACKBOOST1_S;
+		{
+			m_fAttackRange = 4.0f;
+			m_eCurState = RUSSIAN_BATTLE_IDLE;
+		}
 		else
 		{
 			MoveAni(fTimeDelta, 0.f, 0.1f, 6.5f, Get_Look());
@@ -1052,7 +1116,8 @@ void CRussianHat::BoostJump_E(_float fTimeDelta)
 	{
 		if (Get_AniRatio() >= 0.7f)
 		{
-			m_eCurState = RUSSIAN_FIST_ATTACKJUMP_S;
+			m_eCurState = RUSSIAN_BATTLE_IDLE;
+			m_fAttackRange = 4.f;
 		}
 		else
 		{

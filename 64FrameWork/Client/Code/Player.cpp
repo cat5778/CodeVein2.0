@@ -317,20 +317,20 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				switch (m_uiCombo)
 				{
 				case 2:
-					m_pMeshCom->Set_AnimationSet(30);
+					m_pMeshCom->Set_AnimationSet(33);
 					break;
 				case 3:
-					m_pMeshCom->Set_AnimationSet(29);
+					m_pMeshCom->Set_AnimationSet(32);
 					break;
 				case 4:
-					m_pMeshCom->Set_AnimationSet(28);
+					m_pMeshCom->Set_AnimationSet(31);
 					break;
 				case 5:
-					m_pMeshCom->Set_AnimationSet(27);
+					m_pMeshCom->Set_AnimationSet(30);
 					break;
 				case 6:
 				{
-					m_pMeshCom->Set_AnimationSet(31);
+					m_pMeshCom->Set_AnimationSet(34);
 					m_uiCombo = 1;
 				}
 					break;
@@ -347,14 +347,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				if (dRatio >= 0.2&&dRatio < 0.9)
 				{
 					m_eCurState = OBJ_ATTACK;
-					m_pMeshCom->Set_AnimationSet(18);
+					m_pMeshCom->Set_AnimationSet(23);
 				}
 
 			}
 			else
 			{
 				m_eCurState = OBJ_ATTACK;
-				m_pMeshCom->Set_AnimationSet(31);
+				m_pMeshCom->Set_AnimationSet(34);
 				m_uiCombo = 1;
 			}
 		}
@@ -368,7 +368,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_eCurState = OBJ_STRONG_ATTACK;
 
-		m_pMeshCom->Set_AnimationSet(26);
+		m_pMeshCom->Set_AnimationSet(28);
 		if(m_fChargeTime<1.0f)
 		m_fChargeTime += fTimeDelta;
 	}
@@ -744,7 +744,7 @@ void CPlayer::StateMachine()
 		{
 			m_fAnimSpeed = 1.0f;
 			m_fRotSpeed = 6.f;
-			m_pMeshCom->Set_AnimationSet(44);
+			m_pMeshCom->Set_AnimationSet(48);
 		}
 			break;
 		case OBJ_WALK:
@@ -752,43 +752,7 @@ void CPlayer::StateMachine()
 			m_fAnimSpeed = 1.0f;
 			m_fSpeed = 0.6f;
 			m_fRotSpeed = 6.f;
-
-			//if (m_bIsLockOn)
-			//{
-			//	switch (m_dwDirectionFlag)
-			//	{
-			//	case DIR_F:
-			//		m_pMeshCom->Set_AnimationSet(42);
-			//		break;
-			//	case DIR_R:
-			//		m_pMeshCom->Set_AnimationSet(40);
-			//		break;
-			//	case DIR_FR:
-			//		m_pMeshCom->Set_AnimationSet(40);
-			//		break;
-			//	case DIR_B:
-			//		m_pMeshCom->Set_AnimationSet(43);
-			//		break;
-			//	case DIR_BR:
-			//		m_pMeshCom->Set_AnimationSet(40);
-			//		break;
-			//	case DIR_L:
-			//		m_pMeshCom->Set_AnimationSet(41);
-			//		break;
-			//	case DIR_FL:
-			//		m_pMeshCom->Set_AnimationSet(41);
-			//		break;
-			//	case DIR_BL:
-			//		m_pMeshCom->Set_AnimationSet(41);
-			//		break;
-			//	default:
-			//		break;
-			//	}
-			//}
-			//else
-			{
-				m_pMeshCom->Set_AnimationSet(42);
-			}
+			m_pMeshCom->Set_AnimationSet(45);
 		}
 			break;
 		case OBJ_RUN:
@@ -803,28 +767,28 @@ void CPlayer::StateMachine()
 				switch (m_dwDirectionFlag)
 				{
 				case DIR_F:
-					m_pMeshCom->Set_AnimationSet(37);
+					m_pMeshCom->Set_AnimationSet(40);
 					break;
 				case DIR_R:
-					m_pMeshCom->Set_AnimationSet(33);
+					m_pMeshCom->Set_AnimationSet(36);
 					break;
 				case DIR_FR:
-					m_pMeshCom->Set_AnimationSet(33);
+					m_pMeshCom->Set_AnimationSet(36);
 					break;
 				case DIR_B:
-					m_pMeshCom->Set_AnimationSet(39);
+					m_pMeshCom->Set_AnimationSet(42);
 					break;
 				case DIR_BR:
-					m_pMeshCom->Set_AnimationSet(33);
+					m_pMeshCom->Set_AnimationSet(36);
 					break;
 				case DIR_L:
-					m_pMeshCom->Set_AnimationSet(35);
+					m_pMeshCom->Set_AnimationSet(38);
 					break;
 				case DIR_FL:
-					m_pMeshCom->Set_AnimationSet(35);
+					m_pMeshCom->Set_AnimationSet(38);
 					break;
 				case DIR_BL:
-					m_pMeshCom->Set_AnimationSet(35);
+					m_pMeshCom->Set_AnimationSet(38);
 					break;
 				default:
 					break;
@@ -832,7 +796,7 @@ void CPlayer::StateMachine()
 			}
 			else
 			{
-				m_pMeshCom->Set_AnimationSet(37);
+				m_pMeshCom->Set_AnimationSet(40);
 
 			}
 		}
@@ -848,28 +812,28 @@ void CPlayer::StateMachine()
 				switch (m_dwDirectionFlag)
 				{
 				case DIR_F:
-					m_pMeshCom->Set_AnimationSet(21);
+					m_pMeshCom->Set_AnimationSet(27);
 					break;
 				case DIR_R:
-					m_pMeshCom->Set_AnimationSet(19);
+					m_pMeshCom->Set_AnimationSet(24);
 					break;
 				case DIR_FR:
-					m_pMeshCom->Set_AnimationSet(19);
+					m_pMeshCom->Set_AnimationSet(24);
 					break;
 				case DIR_B:
-					m_pMeshCom->Set_AnimationSet(22);
+					m_pMeshCom->Set_AnimationSet(26);
 					break;
 				case DIR_BR:
-					m_pMeshCom->Set_AnimationSet(19);
+					m_pMeshCom->Set_AnimationSet(24);
 					break;
 				case DIR_L:
-					m_pMeshCom->Set_AnimationSet(20);
+					m_pMeshCom->Set_AnimationSet(25);
 					break;
 				case DIR_FL:
-					m_pMeshCom->Set_AnimationSet(20);
+					m_pMeshCom->Set_AnimationSet(25);
 					break;
 				case DIR_BL:
-					m_pMeshCom->Set_AnimationSet(20);
+					m_pMeshCom->Set_AnimationSet(25);
 					break;
 				default:
 					break;
@@ -877,7 +841,7 @@ void CPlayer::StateMachine()
 			}
 			else
 			{
-				m_pMeshCom->Set_AnimationSet(21);
+				m_pMeshCom->Set_AnimationSet(27);
 			}
 		}
 			break;
@@ -894,7 +858,7 @@ void CPlayer::StateMachine()
 		{
 			m_fAnimSpeed = 2.f;
 
-			m_pMeshCom->Set_AnimationSet(26);
+			m_pMeshCom->Set_AnimationSet(28);
 			m_fChargeTime = 0.f;
 
 		}
@@ -902,54 +866,55 @@ void CPlayer::StateMachine()
 		case OBJ_CHARGE_ATTACK:
 		{
 			m_fAnimSpeed = 2.f;
-			m_pMeshCom->Set_AnimationSet(25);
+			m_pMeshCom->Set_AnimationSet(29);
 			m_pMeshCom->Set_AddTrackTime(m_fChargeTime + 0.3f); //0.3f <-다음 Animation  보정값 
 			m_fChargeTime = 0.f;
 		}
 			break;
 		case OBJ_GUARD:
-			m_pMeshCom->Set_AnimationSet(16);
+			m_pMeshCom->Set_AnimationSet(22);
 			break;
 		case OBJ_HURT_F://10
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(13);
+			m_pMeshCom->Set_AnimationSet(18);
 			break;
 		case OBJ_HURT_FR:
 		case OBJ_HURT_R:
 		case OBJ_HURT_BR:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(11);
+			m_pMeshCom->Set_AnimationSet(16);
 			break;
 		case OBJ_HURT_B:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(12);
+			m_pMeshCom->Set_AnimationSet(17);
 			break;
 		case OBJ_HURT_BL:
 		case OBJ_HURT_L:
 		case OBJ_HURT_FL:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(10);
+			m_pMeshCom->Set_AnimationSet(15);
 			break;
+
 		case OBJ_STRONG_HURT_F:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(9);
+			m_pMeshCom->Set_AnimationSet(14);
 			break;
 		case OBJ_STRONG_HURT_FR:
 		case OBJ_STRONG_HURT_R:
 		case OBJ_STRONG_HURT_BR:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(7);
+			m_pMeshCom->Set_AnimationSet(12);
 			break;
 		case OBJ_STRONG_HURT_B:
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(8);
+			m_pMeshCom->Set_AnimationSet(13);
 			break;
 			m_fAnimSpeed = fHurtSpeed;
 		case OBJ_STRONG_HURT_BL:
 		case OBJ_STRONG_HURT_L:
 		case OBJ_STRONG_HURT_FL://25
 			m_fAnimSpeed = fHurtSpeed;
-			m_pMeshCom->Set_AnimationSet(6);
+			m_pMeshCom->Set_AnimationSet(11);
 			break;
 		case OBJ_DEAD:
 			break;
@@ -959,7 +924,7 @@ void CPlayer::StateMachine()
 		{
 			m_fSpeed = 1.5f;
 			m_fAnimSpeed = 1.5f;
-			m_pMeshCom->Set_AnimationSet(42);
+			m_pMeshCom->Set_AnimationSet(45);
 		}
 			break;
 		case OBJ_LOCK_WALK_FR:
@@ -969,7 +934,7 @@ void CPlayer::StateMachine()
 			m_fSpeed = 1.5f;
 			m_fAnimSpeed = 1.5f;
 
-			m_pMeshCom->Set_AnimationSet(40);
+			m_pMeshCom->Set_AnimationSet(43);
 		}
 			break;
 
@@ -977,7 +942,7 @@ void CPlayer::StateMachine()
 		{
 			m_fSpeed = 1.5f;
 			m_fAnimSpeed = 1.5f;
-			m_pMeshCom->Set_AnimationSet(43);
+			m_pMeshCom->Set_AnimationSet(46);
 		}
 			break;
 		case OBJ_LOCK_WALK_BL:
@@ -986,7 +951,7 @@ void CPlayer::StateMachine()
 		{	
 			m_fSpeed = 1.5f;
 			m_fAnimSpeed = 1.5f;
-			m_pMeshCom->Set_AnimationSet(41);
+			m_pMeshCom->Set_AnimationSet(44);
 		}
 		break;
 		case OBJ_END:

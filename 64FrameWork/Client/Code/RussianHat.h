@@ -77,6 +77,7 @@ private:
 	RUSSIANTSTATE				m_eCurState;
 	RUSSIANTSTATE				m_ePreState;
 	_bool						m_bIsPhase2 = false;
+	_uint						m_uiFist=0;
 private:
 	virtual void			Free(void) override;
 };
