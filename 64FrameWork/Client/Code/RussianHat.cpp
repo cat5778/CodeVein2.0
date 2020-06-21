@@ -305,7 +305,7 @@ void CRussianHat::StateMachine()
 
 			m_fAttackRange = 40.f;
 			//m_pMeshCom->Set_AnimationSet(24);
-			m_pMeshCom->Set_AnimationSet(26);
+			m_pMeshCom->Set_AnimationSet(27);
 		}
 			break;
 		case RUSSIAN_ATTACK1:
@@ -386,7 +386,7 @@ void CRussianHat::StateMachine()
 		case RUSSIAN_FIST_ATTACKBOOST1_S:
 			m_fAnimSpeed = 2.0f;
 			m_fRotSpeed = 7.0f;
-			m_fAttackRange = 10.f;
+			m_fAttackRange = 30.f;
 			//m_pMeshCom->Set_AnimationSet(12);
 			m_pMeshCom->Set_AnimationSet(15);
 			break;
@@ -411,6 +411,7 @@ void CRussianHat::StateMachine()
 			break;
 		case RUSSIAN_FIST_ATTACKJUMP_S:
 			m_fRotSpeed = 4.0f;
+			m_fAttackRange = 30.f;
 			//m_pMeshCom->Set_AnimationSet(3);
 			m_pMeshCom->Set_AnimationSet(6);
 			break;
@@ -472,7 +473,7 @@ void CRussianHat::Battle_Start(_float fTimeDelta)
 
 void CRussianHat::Pattern(_float fTimeDelta)
 {
-	if (m_fCurHp / m_fMaxHp >= 0.6f)
+	if (m_fCurHp / m_fMaxHp >= 0.6f&&!m_bIsPhase2)
 		Phase1(fTimeDelta);
 	else
 	{
@@ -486,7 +487,7 @@ void CRussianHat::Chaing_Target(_float fTimeDelta)
 {
 	if (m_pNaviCom != nullptr)
 	{
-		if (m_eCurState == RUSSIAN_RUN||m_eCurState == RUSSIAN_WALK)
+		if (m_eCurState == RUSSIAN_RUN&&m_eCurState == RUSSIAN_WALK)
 		{
 			_vec3	vPos, vDir, vDiagonalDir, vOutPos;
 			_float	fDgree = Get_AngleOnTheTarget();
@@ -892,16 +893,13 @@ void CRussianHat::Deformation(_float fTimeDelta)
 
 			}
 		}
-		else if (Get_AniRatio() >= 0.7f)
+		 if (Get_AniRatio() >= 0.7f)
 		{
 			m_bIsPhase2 = true;
 			m_eCurState = RUSSIAN_BATTLE_IDLE;
 
 		}
-		else
-		{
 
-		}
 
 	}
 }
