@@ -49,8 +49,8 @@ private://Pattern
 	void					Idle(_float fTimeDelta);
 
 	void					Deformation(_float fTimeDelta);
-	//Phase2
 	
+	//Phase2
 	void					Phase2(_float fTimeDelta);
 
 	void					BoostAttack_S(_float fTimeDelta);
@@ -62,6 +62,8 @@ private://Pattern
 	void					BoostJump_S(_float fTimeDelta);
 	void					BoostJump_L(_float fTimeDelta);
 	void					BoostJump_E(_float fTimeDelta);
+
+
 
 	//패턴 추가할것 원거리 마법 ,얼음검 휘두르기 
 

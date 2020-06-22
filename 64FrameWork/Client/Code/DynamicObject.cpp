@@ -284,6 +284,16 @@ void CDynamicObject::RotateToTarget(_float fTimeDelta, _float fMinRatio, _float 
 	
 }
 
+void CDynamicObject::SetColliderEnable(_float fMin, _float fMax)
+{
+	if (Get_AniRatio() >= fMin&& Get_AniRatio() <=fMax)
+		m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, true);
+	else
+		m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_ATTACK, false);
+
+
+}
+
 _float CDynamicObject::Get_AniRatio()
 {
 	return (_float)(m_pMeshCom->Get_TrackPosition() / m_pMeshCom->Get_Period());
@@ -305,6 +315,11 @@ _float CDynamicObject::Get_AngleOnTheTarget()
 _float CDynamicObject::Get_TargetDist()
 {
 	return D3DXVec3Length(&(Get_TargetPos() - Get_Pos()));
+}
+
+void CDynamicObject::HurtMon(_float fDamage)
+{
+	m_fCurHp -= fDamage;
 }
 
 HRESULT CDynamicObject::Load_Text(const TCHAR * pFilePath)

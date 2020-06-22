@@ -44,9 +44,16 @@ public:
 	_float					Get_AngleOnTheTarget();
 	_float					Get_TargetDist();
 
+	void					HurtMon(_float fDamage);
+	
+
 	void					MoveAni(_float fTimeDelta, _float fMinRatio, _float fMaxRatio, _float fSpeed, _vec3 vDir, _bool bIsJump=false);
 	void					RotateAni(_float fTimeDelta, _float fMinRatio, _float fMaxRatio, _float fRotSpeed);
 	void					RotateToTarget(_float fTimeDelta, _float fMinRatio, _float fMaxRatio=1.f);
+	void					SetColliderEnable(_float fMin, _float fMax);
+
+
+
 
 protected:
 	HRESULT					Load_Text(const TCHAR * pFilePath);
@@ -79,8 +86,8 @@ protected:
 	_float					m_fAnimSpeed = 1.0f;
 	_float					m_fRotSpeed = 1.0f;
 	_float					m_fDamage = 10.f;
-	_float					m_fCurHp = 10.f;
-	_float					m_fMaxHp = 10.f;
+	_float					m_fCurHp = 100.f;
+	_float					m_fMaxHp = 100.f;
 
 
 

@@ -4,6 +4,7 @@
 #include "Export_Function.h"
 #include "ThirdPersonCamera.h"
 #include "ColliderManager.h"
+#include "DynamicObject.h"
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, _uint uiIdx,_uint uiStageIdx)
 	: Engine::CGameObject(pGraphicDev)
 {
@@ -85,8 +86,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_eCurState >= 10 && m_eCurState <= 25)
 	{
 		KnockBack(fTimeDelta);
-		
-
 	}
 	else
 		Key_Input(fTimeDelta);
@@ -120,7 +119,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == OBJ_DODGE)
 	{
-		cout << Get_AniRatio() << endl;
 		if (Get_AniRatio() <= 0.3f)
 			m_pColliderGroupCom->Set_ColliderEnable(Engine::COLOPT_HURT, false);
 		else
@@ -132,9 +130,11 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	//_vec3 vPos2 = *m_pTransformCom->Get_Info(Engine::INFO_POS);
 	//cout <<"X=" <<vPos.x << "y="<< vPos.y <<"Z="<< vPos.z << endl;
 	//cout << "Cur Cell " << m_pNaviCom->Get_CurIndex() << endl;
+	//Guard_H(fTimeDelta);
 
 
 	Collision_Check(fTimeDelta);
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pMeshCom->Play_Animation(fTimeDelta*m_fAnimSpeed);
@@ -360,10 +360,24 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 
 	}
+
+
 	if (m_pKeyMgr->KeyPressing(KEY_ALT))
 	{
-		m_eCurState = OBJ_GUARD;
+		
+		Guard(fTimeDelta);
+		m_dwDirectionFlag = 0;
+
 	}
+	
+	if (m_pKeyMgr->KeyUp(KEY_ALT))
+	{
+		m_bIsGuard = false;
+
+		m_eCurState = OBJ_IDLE;
+	}
+
+
 	if (m_pKeyMgr->KeyPressing(KEY_RBUTTON))
 	{
 		m_eCurState = OBJ_STRONG_ATTACK;
@@ -649,10 +663,7 @@ void CPlayer::Check_Direction(_float fTimeDelta)
 			else if (fDgree < 355.f && fDgree >= 180.f)
 				m_pTransformCom->Rotation(Engine::ROT_Y, -m_fRotSpeed* fTimeDelta);
 
-		
-				CheckMoveMesh(fTimeDelta, m_pCameraTransformCom, Engine::INFO_LOOK, false, m_fSpeed);
-		
-
+			CheckMoveMesh(fTimeDelta, m_pCameraTransformCom, Engine::INFO_LOOK, false, m_fSpeed);
 		}
 		break;
 		case DIR_R:
@@ -845,10 +856,6 @@ void CPlayer::StateMachine()
 			}
 		}
 			break;
-		case OBJ_JUMP:
-			break;
-		case OBJ_FALL:
-			break;
 		case OBJ_ATTACK:
 		{
 			m_fAnimSpeed = 1.75f;
@@ -872,11 +879,18 @@ void CPlayer::StateMachine()
 		}
 			break;
 		case OBJ_GUARD:
-			m_pMeshCom->Set_AnimationSet(22);
+			m_fAnimSpeed = 1.f;
+			m_pMeshCom->Set_AnimationSet(21);
 			break;
+		case OBJ_GUARD_H:
+			m_fAnimSpeed = 1.f;
+			m_pMeshCom->Set_AnimationSet(19);
+			break;
+
 		case OBJ_HURT_F://10
 			m_fAnimSpeed = fHurtSpeed;
 			m_pMeshCom->Set_AnimationSet(18);
+
 			break;
 		case OBJ_HURT_FR:
 		case OBJ_HURT_R:
@@ -1085,6 +1099,29 @@ void CPlayer::ChargeAttackMoveSet(_float fTimeDelta)
 
 }
 
+void CPlayer::Guard(_float fTimeDelta)
+{
+	if (m_eCurState == OBJ_GUARD)
+	{
+		if (Get_AniRatio() >= 0.1f)
+		{
+			m_bIsGuard = true;
+		}
+	}
+	m_eCurState = OBJ_GUARD;
+}
+
+
+void CPlayer::Guard_H(_float fTimeDelta)
+{
+	if (m_eCurState == OBJ_GUARD_H)
+	{
+		if (Get_AniRatio() >= 0.89f)
+			m_eCurState = OBJ_GUARD;
+	}
+}
+
+
 void CPlayer::MoveAni(_float fTimeDelta, _float fMinRatio, _float fMaxRatio, _float fSpeed, _vec3 vDir)
 {
 	if (Get_AniRatio() >= fMinRatio && Get_AniRatio() <= fMaxRatio)
@@ -1140,8 +1177,7 @@ void CPlayer::RotateToLook(_float fTimeDelta)
 
 _bool CPlayer::CheckEnableState()
 {
-	//6 ~25 전투패턴
-	if (!(m_eCurState>= 6 && m_eCurState<=25)&& m_eCurState != OBJ_DODGE)
+	if (!(m_eCurState>= OBJ_ATTACK && m_eCurState<= OBJ_RENKETSU_SEARCH)&& m_eCurState != OBJ_DODGE)
 		return true;
 	else
 		return false;
@@ -1181,8 +1217,14 @@ void CPlayer::Collision_Check(_float fTimeDelta)
 
 			if (bIsAttackColl)
 			{
+				CDynamicObject* pMonster = dynamic_cast<CDynamicObject*>(pObject.second);
+
 				if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_ENTER))
+				{
+					pMonster->HurtMon(m_fDamage);
+					
 					cout << "공격 발생 " << endl;
+				}
 				else if (m_pColliderGroupCom->IsColl(Engine::COLOPT_ATTACK, Engine::STATE_STAY))
 					cout << "공격중 " << endl;
 			}
@@ -1209,6 +1251,7 @@ void CPlayer::Collision_Check(_float fTimeDelta)
 			if (bIsHurtColl)
 			{
 				cout << "피격 발생 " << endl;
+				
 				Engine::CTransform* pTargetTransCom = dynamic_cast<Engine::CTransform*>(pObject.second->Get_Component(L"Com_Transform", Engine::ID_DYNAMIC));
 
 				vPos = *m_pTransformCom->Get_Info(Engine::INFO_POS);
@@ -1226,8 +1269,6 @@ void CPlayer::Collision_Check(_float fTimeDelta)
 				}
 				else if (m_pColliderGroupCom->IsColl(Engine::COLOPT_HURT, Engine::STATE_STAY))
 				{
-
-
 					cout << "피격중 " << endl;
 
 				}
@@ -1279,9 +1320,15 @@ void CPlayer::Hurt(_float fTimeDelta, _vec3 vPos, _vec3 vTargetPos, _float fDama
 	_bool bIsStrongAttack = false;
 	if (fDamage >= 10.f)
 		bIsStrongAttack = true;
-	cout << m_dwHurtDirectionFlag << endl;
+
+	if (m_bIsGuard)
+	{
+		m_eCurState = OBJ_GUARD_H;
+		return;
+	}
 	switch (m_dwHurtDirectionFlag)	
 	{
+
 		case DIR_F:
 			bIsStrongAttack ? m_eCurState = OBJ_STRONG_HURT_F	: m_eCurState = OBJ_HURT_F;
 			break;
@@ -1309,7 +1356,7 @@ void CPlayer::Hurt(_float fTimeDelta, _vec3 vPos, _vec3 vTargetPos, _float fDama
 		default:
 			break;
 	}
-	cout << m_eCurState << endl;
+	//cout << m_eCurState << endl;
 
 
 
@@ -1320,8 +1367,6 @@ void CPlayer::Hurt(_float fTimeDelta, _vec3 vPos, _vec3 vTargetPos, _float fDama
 
 void CPlayer::KnockBack(_float fTimeDelta)
 {
-	//if (m_dwHurtDirectionFlag)
-		//m_dwOldHurtDirectionFlag = m_dwHurtDirectionFlag;
 
 	if (m_dwHurtDirectionFlag)
 	{

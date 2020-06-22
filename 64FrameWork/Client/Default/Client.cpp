@@ -91,8 +91,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				pMainApp->Render_MainApp();
 			}		
 
-			/*pMainApp->Update_MainApp(fTimer_Immediate);
-			pMainApp->Render_MainApp();*/
+			//pMainApp->Update_MainApp(fTimer_Immediate);
+			//pMainApp->LateUpdate_MainApp(fTimer_Immediate);
+			//pMainApp->Render_MainApp();
 		}
        
     }
